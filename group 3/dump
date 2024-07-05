@@ -1,3 +1,10 @@
+ 
+ <box-icon name='lock-alt' ></box-icon>
+ <box-icon name='lock-open-alt' ></box-icon>
+ <box-icon name='map-alt' ></box-icon>
+ <box-icon type='solid' name='chat'></box-icon>
+ <box-icon name='bot'></box-icon>
+ 
  <div class="ar">
     <div class="items">
        <img src="images/pascal-m-4PchFKrUw84-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
