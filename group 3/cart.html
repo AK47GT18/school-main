@@ -58,26 +58,28 @@
     </nav>
     <section class="cart">
    <ul>
-    <li> <p>Items</p><input type="number" placeholder="0"></li>
+    <li> <p>Items</p><input id="NumberOfCartItems" type="text" placeholder="0"></li>
     <li> <p>Price</p></li>
     <li> <p>Quantity</p></li>
    </ul>
-   <div class="cart-items">
-    <img id="cart-img" src="images/sabrianna-Y_bxfTa_iUA-unsplash.jpg" alt="01">
-    <label for="cart-img">I-Phone 12</label>
-    <label for="Price">MWK 200,000</label>
-    <input type="number" min="0" step="1" placeholder="0">
+  
+   <div class="cart-item-container">
+    <img id="cart-img" src="" alt="01">
+    <label for="cart-img" id="Cart-ProductName"></label>
+    <label for="Price" id="Cart-ProductPrice"></label>
+    <input type="text"  id="NumberOfProducts">
    </div>
-   <div></div>
+
+
    <div class="cart-pricing">
     <label for="discount">Discount</label>
     <input type="text">
     <label for="Total">Total</label>
-    <input type="text" placeholder="MWK 00.00">
+    <input id="ProductTotal" type="text" placeholder="MWK 00.00">
    </div>
 
    <div>
-    <button class="check-out">Check Out</button>
+    <button class="check-out" id="CheckOut"  ><a  href="https://in.paychangu.com/web/payment/SC-l7OUbg" >Check Out</a></button>
    </div>
 </section>
 <script src="cart.js"></script>

@@ -854,22 +854,25 @@ footer div ul li box-icon {
     margin-top: 10px;
     margin-left: 40%;
  }
+ 
  .cart-items{
     display: flex;
+    padding-top: 20px;
     padding-bottom: 10px;
     border-bottom:solid 2px #d1d8e0;
   
- }
+ }  
  .cart-items label{
+    
     margin-top: 30px;
  }
  .cart-items label:nth-of-type(1)
- {
-    margin-left: 60px;
+ {  position: relative;
+    margin-left: 65px;
  }
  .cart-items label:nth-of-type(2)
- {
-    margin-left: 390px;
+ {    position: relative;
+    margin-left: 393px;
  }
  
  .cart-items input{
@@ -1026,4 +1029,10 @@ position: relative;
 .map{
   margin-left: 190px;
   margin-top: 35px;
+}
+#NumberOfproducts{
+    background-color: red;
+    border-radius:7px ;
+    font-size: 18px;
+   color: #ccc;
 }
