@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .dashboard-container {
+            width: 80%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .dashboard-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .stat-box {
+            background-color: #007BFF;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 30%;
+        }
+        
+        .product-form {
+            margin-bottom: 20px;
+        }
+        
+        .product-form form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-form label {
+            margin-bottom: 5px;
+        }
+        
+        .product-form input {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        .product-form button {
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .product-form button:hover {
+            background-color: #218838;
+        }
+        
+        .product-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .product-list li {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .product-list img {
+            max-width: 50px;
+            margin-right: 20px;
+            border-radius: 4px;
+        }
+        
+        .product-list .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Admin Dashboard</h1>
+        </header>
+        <section class="dashboard-stats">
+            <div class="stat-box">
+                <h2>Total Users</h2>
+                <p id="userCount">0</p>
+            </div>
+        </section>
+        <section class="product-form">
+            <h2>Add New Product</h2>
+            <form id="productForm">
+                <label for="productName">Product Name:</label>
+                <input type="text" id="productName" required>
+
+                <label for="productPrice">Product Price:</label>
+                <input type="number" id="productPrice" required>
+
+                <label for="productImage">Product Image URL:</label>
+                <input type="url" id="productImage" required>
+
+                <button type="submit">Add Product</button>
+            </form>
+        </section>
+        <section class="product-list">
+            <h2>Products</h2>
+            <ul id="productList"></ul>
+        </section>
+    </div>
+
+    <script >document.addEventListener('DOMContentLoaded', function() {
+        const userCount = 150;  // Example user count, you can dynamically fetch this from your database
+        document.getElementById('userCount').textContent = userCount;
+    
+        const productForm = document.getElementById('productForm');
+        const productList = document.getElementById('productList');
+    
+        productForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            const productName = document.getElementById('productName').value;
+            const productPrice = document.getElementById('productPrice').value;
+            const productImage = document.getElementById('productImage').value;
+    
+            const listItem = document.createElement('li');
+    
+            const productImg = document.createElement('img');
+            productImg.src = productImage;
+            productImg.alt = productName;
+    
+            const productInfo = document.createElement('div');
+            productInfo.classList.add('product-info');
+    
+            const productTitle = document.createElement('h3');
+            productTitle.textContent = productName;
+    
+            const productCost = document.createElement('p');
+            productCost.textContent = `$${productPrice}`;
+    
+            productInfo.appendChild(productTitle);
+            productInfo.appendChild(productCost);
+    
+            listItem.appendChild(productImg);
+            listItem.appendChild(productInfo);
+    
+            productList.appendChild(listItem);
+    
+            // Reset form
+            productForm.reset();
+        });
+    });
+    </script>
+</body>
+</html>
