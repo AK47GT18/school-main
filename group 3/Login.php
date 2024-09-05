@@ -10,7 +10,7 @@ error_reporting(E_ALL);
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "E-shop";
+$dbname = "e-shop";
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -32,12 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("s", $Email);
             $stmt->execute();
             $result = $stmt->get_result();
-
            
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-
-              
                 if (password_verify($Password, $row['Password'])) {
                 
                     $_SESSION['loggedin'] = true; 
@@ -49,7 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                     if ($RememberMe) {
                         $token = bin2hex(random_bytes(16));
-                       
                         setcookie('RememberMe', $token, time() + (86400 * 30), '/'); 
                     }
 

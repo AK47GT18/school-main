@@ -6,6 +6,7 @@
         <meta name="viewpoint" content="width= device-width, initial-scale=0.1">
         <link rel="stylesheet" type="text/css" href="main.css">
         <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+ 
      </head>
       
     <body>
@@ -24,8 +25,11 @@
             
             
                 <div class="srch-bx">
-                    <li> <input type="search" placeholder="search" class="srh">
-                    <i><box-icon class="sch" name='search' ></box-icon></i> 
+                    <li> <form method="post" action="search-products.php">
+                        <input type="search" name="search" placeholder="Search" class="srh">
+                        <button type="submit"><box-icon class="sch" name='search'></box-icon></button>
+                    </form>
+                    </form>
                 </li> 
                 </div>
             
@@ -73,9 +77,10 @@
             </section>
            <section class="featured-products">
             <h5>FEATURED PRODUCTS</h5>
-           ,<span> <P >Our Trending Winter wear and Gadgets</P></span>
+            <span> <P >Our Trending Winter wear and Gadgets</P></span>
             <div class="ar">
                 <div class="items">
+                    
                    <img class="ProductImg" src="images/pascal-m-4PchFKrUw84-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
                    <p class="description">Gaming Mouse</p>
                 <p class="Price-description">Price:<span class="Price">MWK 10,000</span></p>
@@ -138,8 +143,6 @@
 
            </section>
 
-
-
           <footer>
             <div><h6>E-shop</h6><p>Our E-shop offers reliable and efficent delivery of a variety of products all across the world </p></div>
             <div><h6>Links</h6>
@@ -170,9 +173,35 @@
                     </span>
                     </ul></div>
           </footer>
-          <div class="rights">          <span>   <p ><box-icon name='copyright' ></box-icon>2024 E-SHOP. All Rights Reserved</p></span>
+          <div class="rights">          <span>  <p ><box-icon name='copyright' ></box-icon>2024 E-SHOP. All Rights Reserved</p></span>
           </div>
-  <script >document.addEventListener("DOMContentLoaded",() =>{
+  <script >
+    document.addEventListener("DOMContentLoaded",function(){
+        const products = document.querySelectorAll(".items");
+        products.forEach(product=>{ 
+          product.addEventListener("dblclick",function(){
+          const ProductImg = product.querySelector('.ProductImg').src;
+          const ProductName = product.querySelector(".description").textContent;
+          const ProductPrice =product.querySelector(".Price-description").textContent;
+          
+          console.log("Storing product data:");
+          console.log("Image:", ProductImg);
+          console.log("Name:", ProductName);
+          console.log("Price:", ProductPrice);
+
+          sessionStorage.setItem("Product-Image",ProductImg);
+          sessionStorage.setItem("Product-Price",ProductPrice);
+          sessionStorage.setItem("Product-Name",ProductName);
+         
+          window.location.href ="product-details.html";
+        });
+        
+          });
+    });
+ 
+    
+    
+    document.addEventListener("DOMContentLoaded",() =>{
     const productDetails = [];
   
  function addproductdetails(event){

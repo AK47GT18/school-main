@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const productTotalInput = document.getElementById("ProductTotal");
         if (productTotalInput) {
-            productTotalInput.value = `MWK ${totalPrice.toFixed(2)}`;
+            productTotalInput.value = `MWK ${totalPrice}`;
         }
     } else {
         document.querySelector(".cart-item-container").innerHTML = "No products in local storage";

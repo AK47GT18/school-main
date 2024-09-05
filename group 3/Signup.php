@@ -4,22 +4,21 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Database connection parameters
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "E-shop";
+$dbname = "e-shop";
 
-// Create connection
+
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
+
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Check if each field is set and trim the input
+
     $firstName = $_POST['firstname'];
     $lastName = $_POST['lastName'];
     $Email = $_POST['Email'];
@@ -27,11 +26,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Country = $_POST['country'];
     $PhoneNumber = $_POST['PhoneNumber'];
 
-    // Validate inputs
+
     if (empty($firstName) || empty($lastName) || empty($Email) || empty($Password) || empty($Country) || empty($PhoneNumber)) {
         echo "Fill in all fields";
     } else {
-        // Check if the email already exists
+
         $sql = "SELECT * FROM Users WHERE Email = ?";
         $stmt = $conn->prepare($sql);
         
@@ -43,10 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($result->num_rows > 0) {
                 echo "This email is already registered. Please use a different email.";
             } else {
-                // Hash the password
+    
                 $hashedPassword = password_hash($Password, PASSWORD_DEFAULT);
-
-                // Insert the new user into the database
                 $insertSql = "INSERT INTO Users (firstName, lastName, Email, Password, Country, PhoneNumber) VALUES (?, ?, ?, ?, ?, ?)";
                 $insertStmt = $conn->prepare($insertSql);
                 

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <style>.product-container {
+        border: 1px solid #ddd;
+        padding: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .product-container:hover {
+        transform: scale(1.05);
+    }
+    
+    .product-link {
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    #product-details {
+        text-align: center;
+        margin: 20px;
+    }
+    
+    #product-image {
+        width: 300px;
+        height: auto;
+        margin-bottom: 20px;
+    }
+    </style>
+</head>
+<body>
+
+    <div id="product-details">
+        <img id="product-image" alt="Product Image">
+        <h1 id="product-title"></h1>
+        <p id="product-description"></p>
+        <p id="product-price"></p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const productImage = sessionStorage.getItem("Product-Image");
+            const productName = sessionStorage.getItem("Product-Name");
+            const productPrice = sessionStorage.getItem("Product-Price");
+
+            console.log("Retrieving:", productImage, productName, productPrice); // Log the data being retrieved
+
+            document.getElementById("product-image").src = productImage;
+            document.getElementById("product-title").textContent = productName;
+            document.getElementById("product-price").textContent = productPrice;
+        });
+    </script>
+   
+</body>
+</html>
