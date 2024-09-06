@@ -1,9 +1,29 @@
+
+<?php
+ session_start();
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "e-shop";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+    $stmt = $conn->prepare("SELECT * FROM products  ");
+    $stmt->execute();
+    $result = $stmt->get_result();
+?>
+
 <!DOCTYPE html> 
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="author" content="group 3">
-        <meta name="viewpoint" content="width= device-width, initial-scale=0.1">
+        <meta name="Viewpoint" content="width= device-width, initial-scale=0.1">
         <link rel="stylesheet" type="text/css" href="main.css">
         <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
  
@@ -15,6 +35,8 @@
             <ul>
                 <li>
                     <p> <B>E-SHOP</B></p>
+                
+               
                    </li>
                 <li>
                     <a href="index.html" class="active"><i><box-icon name='home-alt'></box-icon></i>Home</a>
@@ -22,13 +44,18 @@
                 <li> <a href="shop.html"><box-icon type='solid' name='shopping-bags'></box-icon>Shop</a> </li>
                 <li>  <a href="cart.php"> <i><box-icon name='cart' ></box-icon></i>Cart</a> </li>
                 <li> <a href="ContactUs.html"> Contact Us </a></li>
+                <?php
+                
+                if (isset($_SESSION['users_UserID'])) {
+                  echo '<li>' . htmlspecialchars($_SESSION['users_FirstName']) . '</li>';
+                }
+                ?>
             
             
                 <div class="srch-bx">
                     <li> <form method="post" action="search-products.php">
                         <input type="search" name="search" placeholder="Search" class="srh">
                         <button type="submit"><box-icon class="sch" name='search'></box-icon></button>
-                    </form>
                     </form>
                 </li> 
                 </div>
@@ -39,30 +66,56 @@
                     <span></span>
                     <span></span>
                 </label>
-                <nav class="sidebar">
-        
-                    <ul>
-                        <li>
-                            <a href="Sign-up.html">Sign-Up</a>
-                        </li>
-                        <li>
-                            <a href="Login.html">Login</a>
-                        </li>
-                        <li>
-                            <a href="#">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#">FAQs</a>
-                        </li>
-                        <li>
-                            <a href="Ts&Cs.html">Ts and Cs</a>
-                        </li>
-                        <li>
-                            <a href="Logout.php">Logout</a>
+               
+                    <?php
+                
+                if (isset($_SESSION['users_UserID'])) {
 
-                        </li>
+                 echo ' <nav class="sidebar">        
+                    <ul> 
+                    <li>' . htmlspecialchars($_SESSION['users_FirstName']) . '</li>
+                    <li>
+                  <a href="#">About Us</a>
+              </li>
+              <li>
+                  <a href="#">FAQs</a>
+              </li>
+              <li>
+                  <a href="Ts&Cs.html">Ts and Cs</a>
+              </li>
+              <li>
+                  <a href="Logout.php">Logout</a>
+
+              </li>
+                     
                     </ul>
-                </nav>
+                </nav>';
+                }
+                else{
+                    echo'  
+                    <nav class="sidebar">        
+                    <ul><li>
+                        <a href="Sign-up.html">Sign-Up</a>
+                        </li>
+                    <li>
+                     <a href="Login.html">Login</a>
+                     </li>
+                     <li>
+                     <a href="#">About Us</a>
+                     </li>
+                     <li>
+                     <a href="#">FAQs</a>
+                     </li>
+                     <li>
+                     <a href="Ts&Cs.html">Ts and Cs</a>
+                     </li>
+                     </ul>
+                    </nav>';
+                }
+                ?>
+                      
+                      
+               
             </ul>
         </nav>
     
@@ -79,63 +132,28 @@
             <h5>FEATURED PRODUCTS</h5>
             <span> <P >Our Trending Winter wear and Gadgets</P></span>
             <div class="ar">
-                <div class="items">
-                    
-                   <img class="ProductImg" src="images/pascal-m-4PchFKrUw84-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
-                   <p class="description">Gaming Mouse</p>
-                <p class="Price-description">Price:<span class="Price">MWK 10,000</span></p>
-                <label for="quantity" id="quantity-label">Quantity</label><input id="quantity" type="number">
-                <input class="btn3"   type="button" value="Add To Cart">
-                </div>
-                <div class="items">
-                    <img class="ProductImg"  src="images/domino-164_6wVEHfI-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
-                    <p class="description">Nike Running Shoes</p>
-                 <p class="Price-description">Price:<span class="Price">MWK 40,000</span></p>
-                 <label for="quantity" id="quantity-label">Quantity</label><input id="quantity" type="number">
-                 <input class="btn3"   type="button" value="Add To Cart">
-                 </div>
-                <div class="items" >
-                    <img class="ProductImg" src="images/paolo-giubilato-ZwKCWVFdrcs-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
-                    <p class="description">IPhone 12</p>
-                 <p class="Price-description">Price:<span class="Price">MWK 100,000</span></p>
-                 <label for="quantity" id="quantity-label">Quantity</label><input id="quantity" type="number">
-                 <input class="btn3"   type="button" value="Add To Cart">
-                 </div>
-                 <div class="items">
-                    <img class="ProductImg" src="images/anomaly-WWesmHEgXDs-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
-                    <p class="description">T-shirts</p>
-                 <p class="Price-description">Price:<span class="Price">MWK 12,000</span></p>
-                 <label for="quantity" id="quantity-label">Quantity</label><input id="quantity" class="quantity" type="number">
-                 <input class="btn3"   type="button" value="Add To Cart">
-                 </div>
-                 <div class="items">
-                    <img class="ProductImg" src="images/rishabh-malhotra-83ypHTv6J2M-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
-                    <p class="description">Iphone 13</p>
-                 <p class="Price-description">Price:<span class="Price">MWK 190,000</span></p>
-                 <label for="quantity" id="quantity-label">Quantity</label><input id="quantity" type="number">
-                 <input class="btn3"   type="button" value="Add To Cart">
-                 </div>
-                 <div class="items">
-                    <img class="ProductImg" src="images/sabrianna-Y_bxfTa_iUA-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
-                    <p class="description">Diamond Ring</p>
-                 <p class="Price-description">Price:<span class="Price">MWK 250,000</span></p>
-                 <label for="quantity" id="quantity-label">Quantity</label><input id="quantity" type="number">
-                 <input class="btn3"   type="button" value="Add To Cart">
-                 </div>
-                 <div class="items">
-                    <img class="ProductImg" src="images/tomasz-gawlowski-YDZPdqv3FcA-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
-                    <p class="description">Head phones</p>
-                 <p class="Price-description">Price:<span class="Price">MWK 35,000</span></p>
-                
-                 <input class="btn3"   type="button" value="Add To Cart">
-                 </div>
-                 <div class="items">
-                    <img class="ProductImg" src="images/paul-volkmer-updW-QUccFE-unsplash.jpg" alt="pascal-m-4PchFKrUw84-unsplash">
-                    <p class="description">Jordan 1</p>
-                 <p class="Price-description">Price:<span class="Price">MWK 75,000</span></p>
-                 <label for="quantity" id="quantity-label">Quantity</label><input id="quantity" type="number">
-                 <input class="btn3"   type="button" value="Add To Cart">
-                 </div>
+            <?php
+    if ($result && $result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $imageData = $row['Image']; 
+            $productName = htmlspecialchars($row['product_name'] ?? '');
+            $price = htmlspecialchars($row['price'] ?? '');
+           
+          
+            echo '<div class="items">
+                    <img class="ProductImg" src='.$imageData.' alt="' . $productName . '">
+                    <p class="description">' . $productName . '</p>
+                    <p class="Price-description">Price: <span class="Price">MWK ' . $price . '</span></p>
+                    <label for="quantity" id="quantity-label">Quantity</label>
+                    <input id="quantity" type="number">
+                    <input class="btn3" type="button" value="Add To Cart">
+                 </div>';
+        }
+    } else {
+        echo "<script>alert('No data found in the database');</script>";
+    }
+    $conn->close();
+    ?>
                 </div>
            </section>
 

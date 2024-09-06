@@ -39,6 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                     $_SESSION['loggedin'] = true; 
                     $_SESSION['user_email'] = $Email; 
+                    $_SESSION['users_FirstName'] = $row['FirstName'];
+                    $_SESSION['users_UserID'] =  $row['UserID'];
                     $adminPassword = 'Arthony#47K';
                     if ($Password === $adminPassword) {
                         header("Location: AdminDashboard.html");
@@ -49,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         setcookie('RememberMe', $token, time() + (86400 * 30), '/'); 
                     }
 
-                    header("Location: index.html");
+                    header("Location: index.php");
                     exit(); 
                 } else {
                     echo "<script>

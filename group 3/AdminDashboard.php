@@ -1,4 +1,23 @@
+<?php
+ session_start();
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "e-shop";
 
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+    $stmt = $conn->prepare("SELECT COUNT(UserID) AS user_count FROM users ");
+    $stmt->execute();
+    $stmt->bind_result($count);
+    $stmt->fetch();
+
+?>
     <!DOCTYPE html>
     <html lang="en">
         <head>
@@ -30,7 +49,7 @@
                 </div>
                 <div class="sidebar">
                     <ul>
-                    <li><a href="#">
+                    <li><a href="UserManagment.php">
                         <i class="fas fa-users"></i>
                         <div>Customers</div>
                     </a>
@@ -61,7 +80,7 @@
                    <div class="cards">
                         <div class="card">
                             <div class="card-content">
-                                <div class="number">1250</div>
+                                <div class="number"><?php if ($count > 0) echo $count; ?></div>
                                 <div class="card-name">Customers</div>
                             <div class="icon-box">
                                 <i class="fas fa-users"></i>

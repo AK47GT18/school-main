@@ -3,7 +3,7 @@ session_start();
 
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location: Login.html"); 
+    header("Location: Login.php"); 
     exit();
 }
 ?>
@@ -25,7 +25,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 <p> <B>E-SHOP</B></p>
                </li>
             <li>
-                <a href="index.html" class="active"><i><box-icon name='home-alt'></box-icon></i>Home</a>
+                <a href="index.php" class="active"><i><box-icon name='home-alt'></box-icon></i>Home</a>
             </li>
             <li> <a href="shop.html"><box-icon type='solid' name='shopping-bags'></box-icon>Shop</a> </li>
             <li>  <a href="cart.html"> <i><box-icon name='cart' ></box-icon></i> Cart</a> </li>
@@ -99,7 +99,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 checkoutLink.addEventListener('click', (event) => {
                     event.preventDefault(); 
                     alert('You must be logged in to access this page.'); 
-                    window.location.href = 'Login.html';
+                    window.location.href = 'Login.php';
                 });
             }
         });
