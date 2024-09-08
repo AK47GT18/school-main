@@ -135,12 +135,13 @@ if ($conn->connect_error) {
             <?php
     if ($result && $result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
+            $productId = $row['product_id'];
             $imageData = $row['Image']; 
             $productName = htmlspecialchars($row['product_name'] ?? '');
             $price = htmlspecialchars($row['price'] ?? '');
            
           
-            echo '<div class="items">
+            echo '<div class="items"  data-id = '.$productId.'>
                     <img class="ProductImg" src='.$imageData.' alt="' . $productName . '">
                     <p class="description">' . $productName . '</p>
                     <p class="Price-description">Price: <span class="Price">MWK ' . $price . '</span></p>
@@ -225,11 +226,12 @@ if ($conn->connect_error) {
  function addproductdetails(event){
     const product = event.target.closest(".items");
      if(product)
-{
+{       const productID = product.getAttribute('data-id');
         const name = product.querySelector(".description").textContent;
         const price = product.querySelector(".Price").textContent;
         const image = product.querySelector(".ProductImg").src;
         const Details = {
+            ID: productID,
             Image: image,
             Name: name,
             Price: price
