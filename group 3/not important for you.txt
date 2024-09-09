@@ -1,0 +1,133 @@
+<?php
+session_start();
+
+// Ensure the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['users_UserID'])) {
+    header("Location: Login.html");
+    exit();
+}
+
+include 'config.php';
+include 'accesstoken.php';
+include 'RegisterIPN.php';
+
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "e-shop";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$userId = $_SESSION['users_UserID'];
+
+// Validate form submission
+if (!isset($_POST['total_price']) || !isset($_POST['products'])) {
+    die("Invalid form submission");
+}
+
+$totalPrice = $_POST['total_price'];
+$products = $_POST['products'];
+
+$userId = $conn->real_escape_string($userId);
+$totalPrice = $conn->real_escape_string($totalPrice);
+$products = $conn->real_escape_string($products);
+
+// Insert order into the database
+$stmt = $conn->prepare("INSERT INTO orders (User_ID, TotalPrice, Products) VALUES (?, ?, ?)");
+if (!$stmt) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("sss", $userId, $totalPrice, $products);
+
+if ($stmt->execute()) {
+    $orderId = $stmt->insert_id;
+    echo "Order placed successfully. Order ID: " . $orderId;
+} else {
+    echo "Error: " . $stmt->error;
+    $stmt->close();
+    $conn->close();
+    exit();
+}
+
+$stmt->close();
+
+// Define the API URL based on the environment
+$apiUrl = APP_ENVIROMENT == 'sandbox' ? "https://cybqa.pesapal.com/pesapalv3/api/Transactions/SubmitOrderRequest" : "https://pay.pesapal.com/v3/api/Transactions/SubmitOrderRequest";
+$headers = [
+    "Accept: application/json",
+    "Content-Type: application/json",
+    "Authorization: Bearer $token"
+];
+
+// Retrieve order and user data
+$orderQuery = "SELECT o.id, o.TotalPrice, o.Products, u.Email, u.PhoneNumber, u.FirstName, u.LastName
+               FROM orders o
+               JOIN users u ON o.User_ID = u.UserID
+               WHERE o.id = ?";
+$stmt = $conn->prepare($orderQuery);
+$stmt->bind_param("i", $orderId);
+$stmt->execute();
+$result = $stmt->get_result();
+$order_data = $result->fetch_assoc();
+
+if ($order_data) {
+    // Prepare billing address
+    $billing_address = [
+        "email_address" => $order_data['Email'],
+        "phone_number" => $order_data['PhoneNumber'],
+        "country_code" => "MW",
+        "first_name" => $order_data['FirstName'],
+        "last_name" => $order_data['LastName'],
+        "city" => "",
+        "state" => "",
+        "postal_code" => ""
+    ];
+
+    // Use the correct notification ID (from IPN registration)
+    $notification_id = "your_notification_id_here"; // Replace with the actual notification ID received from IPN registration
+
+    // Prepare order request data for Pesapal
+    $order_request_data = [
+        "id" => $orderId,
+        "currency" => "MWK",
+        "amount" => $order_data['TotalPrice'],
+        "description" => "Order ID: $orderId",
+        "callback_url" => "https://yourdomain.com/callback", // Replace with your actual callback URL
+        "notification_id" => $notification_id, 
+        "billing_address" => $billing_address,
+        "order_items" => json_decode($order_data['Products'], true)
+    ];
+
+    // Send request to Pesapal API
+    $ch = curl_init($apiUrl);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($order_request_data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    $error = curl_error($ch);
+    curl_close($ch);
+
+    if ($error) {
+        echo "Error submitting order: " . $error;
+    } else {
+        $order_response = json_decode($response, true);
+
+        // Check if the order was successfully created
+        if (isset($order_response['redirect_url'])) {
+            $redirect_url = $order_response['redirect_url'];
+            echo "Order successfully created. Redirect to: " . $redirect_url;
+        } else {
+            echo "Error in order response: " . print_r($order_response, true);
+        }
+    }
+} else {
+    echo "Order data not found.";
+}
+
+$conn->close();
+?>

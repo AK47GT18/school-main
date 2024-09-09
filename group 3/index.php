@@ -119,15 +119,34 @@ if ($conn->connect_error) {
             </ul>
         </nav>
     
-        <section class="images">
-            
-             
-              <img src="images/alyssa-strohmann-TS--uNw-JqE-unsplash.jpg" alt="images/alyssa-strohmann-TS--uNw-JqE-unsplash">
-            </div>
+        <section class="slider">
+    <div class="slides">
+        <div class="slide active"> <!-- Default first slide as active -->
+            <img src="images/cord-allman-0aWg-ubSVLM-unsplash.jpg" alt="Slide 1">
             <div class="text">
-                <h3>E-SHOP</h3>
-                <P>Welcome To Our E-Shop with variety of options to buy   <button class="btn01"><a href="shop.html" >.</a>Shop now</button> </P> 
-            </section>
+                <h3>E-SHOP 1</h3>
+                <p>Welcome To Our E-Shop with a variety of options to buy</p>
+                <button class="btn01"><a href="shop.html">Shop-now</a></button>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="images/glenn-carstens-peters-npxXWgQ33ZQ-unsplash.jpg" alt="Slide 2">
+            <div class="text">
+                <h3>E-SHOP 2</h3>
+                <p>Explore the latest products</p>
+                <button class="btn01"><a href="shop.html">Shop now</a></button>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="images/maxim-hopman-Hin-rzhOdWs-unsplash.jpg" alt="Slide 3">
+            <div class="text">
+                <h3>E-SHOP 3</h3>
+                <p>Discover amazing deals</p>
+                <button class="btn01"><a href="shop.html">Shop now</a></button>
+            </div>
+        </div>
+    </div>
+</section>  
            <section class="featured-products">
             <h5>FEATURED PRODUCTS</h5>
             <span> <P >Our Trending Winter wear and Gadgets</P></span>
@@ -250,6 +269,31 @@ AddToCarts.forEach(AddToCart =>{
     AddToCart.addEventListener("click",addproductdetails);
 });
 });
+
+let slideIndex = 0;
+let direction = 1; // 1 for forward, -1 for backward
+const slides = document.querySelectorAll('.slide');
+
+function showSlides() {
+    const slider = document.querySelector('.slides');
+    slider.style.transform = `translateX(-${slideIndex * 100}%)`; // Slide out images horizontally
+
+    // Move to the next slide
+    slideIndex += direction;
+
+    // Check if we need to change direction
+    if (slideIndex >= slides.length - 1 && direction === 1) {
+        direction = -1; // Start moving backward
+    } else if (slideIndex <= 0 && direction === -1) {
+        direction = 1; // Start moving forward
+    }
+
+    // Set timer for next slide
+    setTimeout(showSlides, 3000); // Change slide every 3 seconds
+}
+
+// Start the slide show
+showSlides();
 
 
 </script>

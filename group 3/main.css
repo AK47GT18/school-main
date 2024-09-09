@@ -428,23 +428,8 @@ select:focus{
     font-size: 18px;
     transition: 1s;
 }
-.text{
-    position: absolute;
-    top: 40%;
-    left: 5%;
-    width: 670px;
-    display: block;
-    transform: translate(-100%);
-    font-size: 40px;
-    color: rgba(000);
-    animation: slide-in 8s forwards;
-    opacity: 0;
-}
-@keyframes slide-in{to{
-    opacity: 1;
-    transform: translateX(0);
-}
-}
+
+
 .images2{
     width: auto;
     height: 50%;
@@ -906,7 +891,9 @@ h5{
     justify-content: center;
 }
 .featured-products{
+    
     background-color:whitesmoke;
+
 }
 .featured-products span p {
     font-size: 23px;
@@ -1036,4 +1023,100 @@ position: relative;
     border-radius:7px ;
     font-size: 18px;
    color: #ccc;
+}
+/* Basic styling for the slider */
+/* Slider container */
+.slider {
+    position: relative;
+    width: 100%;
+    height: 30%;
+    overflow: hidden;
+}
+
+/* Slides wrapper */
+.slides {
+    display: flex;
+    width: 300%; /* 100% for each of the 3 slides */
+    height: 30%;
+    transition: transform 0.8s ease-in-out;
+}
+
+/* Individual slide */
+.slide {
+    width: 100%;
+    flex-shrink: 0;
+    position: relative;
+    height: 30%;
+}
+
+.slide img {
+    padding-top: 56px;
+    width: 50%;
+    height: 645px;
+    object-fit: cover;
+}
+
+/* Text overlay */
+.text {
+    position: absolute;
+    top: 40%;
+    left: 5%;
+    width: 60%;
+    font-size: 40px;
+    color: rgba(0, 0, 0, 1);
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.text h3, .text p {
+    margin: 0;
+}
+
+.text p {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+/* Button styling */
+.text .btn01 {
+    background: #007bff;
+    border: none;
+    padding: 30px 100px;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background 0.3s ease;
+}
+
+.text .btn01 a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+}
+
+.text .btn01:hover {
+    background: #0056b3;
+    cursor: pointer;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .text {
+        top: 30%;
+        left: 10%;
+        width: 80%;
+        font-size: 24px;
+        padding: 10px;
+    }
+
+    .text p {
+        font-size: 14px;
+    }
+
+    .text .btn01 {
+        padding: 8px 16px;
+    }
 }

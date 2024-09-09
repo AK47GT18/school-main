@@ -11,11 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
         productList.forEach(product => {
             const productDiv = document.createElement("div");
             productDiv.classList.add("cart-items");
-            productDiv.innerHTML = `
-                <img id="cart-img" src="${product.Image}" alt="${product.Name}">
-                <label for="cart-img" id="Cart-ProductName">${product.Name}</label>
-                <label for="Price" id="Cart-ProductPrice">${product.Price}</label>
-                <input type="text" placeholder ="0" id="NumberOfProducts">`;
+            productDiv.innerHTML =` <table>
+        <tr>
+            <td><img id="cart-img" src="${product.Image}" alt="${product.Name}"></td>
+            <td><label for="cart-img" id="Cart-ProductName">${product.Name}</label></td>
+            <td><label for="Price" id="Cart-ProductPrice">${product.Price}</label></td>
+            <td> <input type="text" placeholder ="0" id="NumberOfProducts"></td>
+        </tr>
+    </table>`;
             cartItemsContainer.appendChild(productDiv);
 
             
