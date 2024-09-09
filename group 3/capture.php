@@ -1,7 +1,5 @@
 <?php
-// Load credentials from environment variables
-$accessToken = 'YOUR_ACCESS_TOKEN'; // Replace with the actual access token
-
+include 'accesstoken.php';
 // Get the JSON data from the POST request
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -10,6 +8,9 @@ if (!isset($data['orderID'])) {
     echo json_encode(['status' => 'error', 'message' => 'Invalid input data']);
     exit();
 }
+
+// PayPal credentials
+$accessToken = $accessToken; // Replace with your actual access token
 
 // Prepare the PayPal API URL for capturing an order
 $apiUrl = "https://api-m.sandbox.paypal.com/v2/checkout/orders/{$data['orderID']}/capture";
