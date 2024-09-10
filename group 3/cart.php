@@ -19,22 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Get form data
-    $userId = $_SESSION['user_id']; // Assuming user ID is stored in the session
-    $totalPrice = $_POST['total_price'];
-    $products = $_POST['products']; // This should be a JSON-encoded array
-
-    // Insert order into database
-    $stmt = $conn->prepare("INSERT INTO orders (UserID, TotalPrice, Products) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $userId, $totalPrice, $products);
-
-    if ($stmt->execute()) {
-        echo "Order placed successfully";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-
-    $stmt->close();
-    $conn->close();
 }
 ?>
 
@@ -83,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </ul>
     </nav>
     <section class="cart">
-        <form id="checkout-form" action="checkOut.php" method="POST">
+        <form id="checkout-form" action="CheckOut.php" method="POST">
             <ul>
                 <li><p>Items</p><input id="NumberOfCartItems" type="text" placeholder="0" readonly></li>
                 <li><p>Price</p></li>
@@ -101,99 +85,143 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div>
+            <button id="clear-cart">Clear Cart</button>
                 <button class="check-out" id="CheckOut" type="submit">Check Out</button>
             </div>
-            <script src="https://www.paypal.com/sdk/js?client-id=ATDmUJc_BrEUewbOg-j-j_oKIkmkYsxsVkM_L-RZirDTPGOt_Mk6op0E5h0NAxiAsPpALG8Fy1r_RB-R&currency=USD"></script>
-            <div id="paypal-button-container"></div>
         </form>
     </section>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const storedProducts = localStorage.getItem('SelectedProducts');
+      document.addEventListener("DOMContentLoaded", () => {
+    // Load cart products from localStorage
+    const storedProducts = localStorage.getItem('SelectedProducts');
 
-            if (storedProducts) {
-                const productList = JSON.parse(storedProducts);
-                const cartItemsContainer = document.querySelector(".cart-item-container");
-                cartItemsContainer.innerHTML = "";
+    if (storedProducts) {
+        const productList = JSON.parse(storedProducts);
+        const cartItemsContainer = document.querySelector(".cart-item-container");
+        cartItemsContainer.innerHTML = "";
 
-                let totalPrice = 0;
+        let totalPrice = 0;
 
-                productList.forEach(product => {
-                    const productDiv = document.createElement("div");
-                    productDiv.classList.add("cart-items");
-                    productDiv.innerHTML = `
-                        <table>
-                            <tr>
-                                <td><img id="cart-img" src="${product.Image}" alt="${product.Name}"></td>
-                                <td><label for="cart-img" id="Cart-ProductName">${product.Name}</label></td>
-                                <td><label for="Price" id="Cart-ProductPrice">${product.Price}</label></td>
-                                <td><input type="number" value="1" class="product-quantity" data-price="${product.Price}" data-name="${product.Name}"></td>
-                            </tr>
-                        </table>`;
-                    cartItemsContainer.appendChild(productDiv);
+        productList.forEach(product => {
+            const productDiv = document.createElement("div");
+            productDiv.classList.add("cart-items");
+            productDiv.innerHTML = `
+                <table>
+                    <tr>
+                        <td><img id="cart-img" src="${product.Image}" alt="${product.Name}"></td>
+                        <td><label for="cart-img" id="Cart-ProductName">${product.Name}</label></td>
+                        <td><label for="Price" id="Cart-ProductPrice">${product.Price}</label></td>
+                        <td><input type="number" value="1" min="1" class="product-quantity" data-price="${product.Price}" data-id="${product.ID}"></td>
+                        <td><button class="remove-item">Remove</button></td>
+                    </tr>
+                </table>`;
+            cartItemsContainer.appendChild(productDiv);
 
-                    totalPrice += parseFloat(product.Price.replace('MWK', ''));
-                });
-
-                const productTotalInput = document.getElementById("ProductTotal");
-                if (productTotalInput) {
-                    productTotalInput.value = `MWK ${totalPrice.toFixed(2)}`;
-                }
-
-                const productsField = document.getElementById("products");
-                if (productsField) {
-                    productsField.value = JSON.stringify(productList);
-                }
-
-                const totalPriceField = document.getElementById("total_price");
-                if (totalPriceField) {
-                    totalPriceField.value = totalPrice.toFixed(2);
-                }
-            } else {
-                document.querySelector(".cart-item-container").innerHTML = "No products in local storage";
-            }
+            totalPrice += parseFloat(product.Price.replace('MWK', ''));
         });
 
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                return fetch('create_order.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        totalPrice: document.getElementById('total_price').value,
-                        products: document.getElementById('products').value
-                    })
-                }).then(function(res) {
-                    return res.json();
-                }).then(function(orderID) {
-                    if (!orderID.id) {
-                        throw new Error('Order ID not received');
-                    }
-                    return orderID.id;
-                }).catch(function(error) {
-                    console.error('Error creating order:', error);
-                });
-            },
-            onApprove: function(data, actions) {
-                return fetch('capture_order.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        orderID: data.orderID
-                    })
-                }).then(function(res) {
-                    return res.json();
-                }).then(function(details) {
-                    alert('Transaction completed by ' + details.payer.name.given_name);
-                }).catch(function(error) {
-                    console.error('Error capturing order:', error);
-                });
-            }
-        }).render('#paypal-button-container');
+        updateTotalPrice(totalPrice);
+
+        // Update hidden input fields with cart data
+        document.getElementById("products").value = JSON.stringify(productList);
+        document.getElementById("total_price").value = totalPrice.toFixed(2);
+    } else {
+        document.querySelector(".cart-item-container").innerHTML = "No products in local storage";
+    }
+
+    // Event listener for removing individual products (using event delegation)
+    document.querySelector(".cart-item-container").addEventListener("click", (event) => {
+        if (event.target.classList.contains("remove-item")) {
+            removeProduct(event);
+        }
+    });
+
+    // Event listener for updating price when quantity changes
+    document.querySelector(".cart-item-container").addEventListener("input", (event) => {
+        if (event.target.classList.contains("product-quantity")) {
+            updateQuantity(event);
+        }
+    });
+
+    // Clear Cart button
+    document.getElementById("clear-cart").addEventListener("click", (event) => {
+        event.preventDefault(); // Prevent form submission
+        clearCart();
+    });
+});
+
+// Function to update total price
+function updateTotalPrice(totalPrice) {
+    const productTotalInput = document.getElementById("ProductTotal");
+    if (productTotalInput) {
+        productTotalInput.value = `MWK ${totalPrice.toFixed(2)}`;
+    }
+}
+
+// Remove individual product from cart and localStorage
+function removeProduct(event) {
+    const product = event.target.closest(".cart-items");
+    if (product) {
+        const productID = product.querySelector(".product-quantity").dataset.id;
+        let productDetails = JSON.parse(localStorage.getItem('SelectedProducts')) || [];
+
+        // Filter out the product with matching ID
+        productDetails = productDetails.filter(item => item.ID !== productID);
+
+        // Update localStorage with remaining products
+        localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
+
+        // Remove product from DOM
+        product.remove();
+
+        // Recalculate total price
+        let newTotal = productDetails.reduce((acc, curr) => acc + parseFloat(curr.Price.replace('MWK', '')), 0);
+        updateTotalPrice(newTotal);
+
+        // Update hidden fields
+        document.getElementById("products").value = JSON.stringify(productDetails);
+        document.getElementById("total_price").value = newTotal.toFixed(2);
+    }
+}
+
+// Clear the entire cart
+function clearCart() {
+    localStorage.removeItem('SelectedProducts');
+    document.querySelector(".cart-item-container").innerHTML = "No products in local storage";
+    updateTotalPrice(0);
+
+    // Update hidden fields
+    document.getElementById("products").value = "";
+    document.getElementById("total_price").value = "0.00";
+}
+
+// Update quantity and total price when user changes quantity
+function updateQuantity(event) {
+    const quantityInput = event.target;
+    const newQuantity = parseInt(quantityInput.value);
+    const pricePerItem = parseFloat(quantityInput.dataset.price.replace('MWK', ''));
+    const productID = quantityInput.dataset.id;
+
+    let productDetails = JSON.parse(localStorage.getItem('SelectedProducts')) || [];
+
+    // Find the product in localStorage and update quantity (if needed)
+    const product = productDetails.find(item => item.ID === productID);
+    if (product) {
+        const oldPrice = parseFloat(product.Price.replace('MWK', ''));
+        const newPrice = pricePerItem * newQuantity;
+        product.Price = `MWK ${newPrice.toFixed(2)}`;
+        localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
+    }
+
+    // Recalculate total price
+    let newTotal = productDetails.reduce((acc, curr) => acc + parseFloat(curr.Price.replace('MWK', '')), 0);
+    updateTotalPrice(newTotal);
+
+    // Update hidden fields
+    document.getElementById("products").value = JSON.stringify(productDetails);
+    document.getElementById("total_price").value = newTotal.toFixed(2);
+}
+
     </script>
 </body>
 </html>

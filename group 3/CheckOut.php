@@ -1,56 +1,110 @@
 <?php
-session_start();
+session_start(); // Start the session to use session variables
 
-// Ensure the user is logged in
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['users_UserID'])) {
-    header("Location: Login.html");
+// Check if the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: Login.php"); 
     exit();
 }
 
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "e-shop";
+$servername = "localhost"; 
+$username = "root"; 
+$password = ""; 
+$dbname = "e-shop"; 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$userId = $_SESSION['users_UserID'];
+// Get the logged-in user's ID and other details from the session
+$userID = $_SESSION['users_UserID']; // UserID stored during login
+$userEmail = $_SESSION['user_email']; // Email stored during login
+$firstName = $_SESSION['users_FirstName']; // FirstName stored during login
+$Phone = $_SESSION['PhoneNumber']; // PhoneNumber stored in the session
 
-// Validate form submission
-if (!isset($_POST['total_price']) || !isset($_POST['products'])) {
-    die("Invalid form submission");
-}
+// Generate a random total price between 100 and 500
+$totalPrice = rand(100, 500); // Adjust the range as needed
+$products = isset($_POST['products']) ? $_POST['products'] : ''; // This should be a JSON-encoded array
 
-$totalPrice = $_POST['total_price'];
-$products = $_POST['products'];
+// Generate a random charge_id
+$charge_id = bin2hex(random_bytes(16)); // Generates a unique identifier
 
-// Escape user inputs for security
-$userId = $conn->real_escape_string($userId);
-$totalPrice = $conn->real_escape_string($totalPrice);
-$products = $conn->real_escape_string($products);
-
-// Insert order into the database
-$stmt = $conn->prepare("INSERT INTO orders (User_ID, TotalPrice, Products, payment_status) VALUES (?, ?, ?, 'Pending')");
-if (!$stmt) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt->bind_param("sss", $userId, $totalPrice, $products);
+// Insert order into database
+$stmt = $conn->prepare("INSERT INTO orders (User_ID, TotalPrice, Products, ChargeID) VALUES (?, ?, ?, ?)");
+$stmt->bind_param("iiss", $userID, $totalPrice, $products, $charge_id);
 
 if ($stmt->execute()) {
-    $orderId = $stmt->insert_id;
-    $stmt->close();
-    
-    // Redirect to payment page with the order ID
-    header("Location: payments.php?order_id=$orderId");
-    exit();
+    echo "Order placed successfully with amount: $totalPrice";
+
+    // Retrieve the most recent order ID for the user
+    $sql = "SELECT id FROM orders WHERE User_ID = ? ORDER BY id DESC LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    if ($stmt) {
+        $stmt->bind_param("i", $userID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $orderID = $row['id'];
+
+            // Check if $Phone is not null and has a value
+            $mobileMoneyOperatorRefId = '27494cb5-ba9e-437f-a114-4e7a7686bcca';
+            if ($mobileMoneyOperatorRefId !== null && !empty($totalPrice)) {
+                // cURL request (POST)
+                $curl = curl_init();
+
+                curl_setopt_array($curl, [
+                    CURLOPT_URL => "https://api.paychangu.com/mobile-money/payments/initialize",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => json_encode([
+                        'mobile' => $Phone,
+                        'mobile_money_operator_ref_id' => $mobileMoneyOperatorRefId,
+                        'amount' => $totalPrice, // Random amount
+                        'charge_id' => $charge_id, // Unique charge ID
+                        'email' => $userEmail, // Email from session
+                        'first_name' => $firstName, // First name from session
+                    ]),
+                    CURLOPT_HTTPHEADER => [
+                        "Authorization: Bearer sec-test-hGZO2qC50metjPeq4SSJhn4iXMDPNcID",
+                        "accept: application/json",
+                        "content-type: application/json"
+                    ],
+                ]);
+
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
+                curl_close($curl);
+
+                if ($err) {
+                    echo "cURL Error #2: " . $err;
+                } else {
+                    header("Location: verify_payment.php?charge_id=$charge_id&orderID=$orderID");
+                    exit();
+                }
+            } else {
+                echo "Invalid mobile number or no valid amount found.";
+            }
+        } else {
+            echo "No orders found for the specified user.";
+        }
+        $stmt->close();
+    } else {
+        echo "Error in SQL statement: " . $conn->error;
+    }
 } else {
-    echo "Error: " . $stmt->error;
+    echo "Error inserting order: " . $stmt->error;
+    exit();
 }
 
-$stmt->close();
 $conn->close();
 ?>

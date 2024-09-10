@@ -1,92 +1,106 @@
 <?php
-session_start();
-
-// Ensure the user is logged in
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location: Login.html");
-    exit();
-}
-
-// Retrieve order_id from query parameters
-$order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
+session_start(); // Start the session to use session variables
 
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "e-shop";
+$servername = "localhost"; 
+$username = "root"; 
+$password = ""; 
+$dbname = "e-shop"; 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch order details from the database
-$stmt = $conn->prepare("SELECT TotalPrice FROM orders WHERE id = ?");
-$stmt->bind_param("i", $order_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$order = $result->fetch_assoc();
-$totalPrice = $order['TotalPrice'];
-$stmt->close();
+// Check if the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    die("User not logged in.");
+}
+
+// Get the logged-in user's ID from the session
+$userID = $_SESSION['users_UserID']; // UserID stored during login
+$userEmail = $_SESSION['user_email']; // Email stored during login
+$firstName = $_SESSION['users_FirstName']; // FirstName stored during login
+
+// Query to retrieve user and order data from the database
+$sql = "SELECT u.PhoneNumber, o.TotalPrice 
+        FROM users u 
+        INNER JOIN orders o ON u.UserID = o.User_ID 
+        WHERE u.UserID = ? AND o.payment_status = 'pending'";
+
+$stmt = $conn->prepare($sql);
+if ($stmt) {
+    $stmt->bind_param("i", $userID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Fetch the row
+        $row = $result->fetch_assoc();
+        $mobile = $row['PhoneNumber'];
+        $amount = $row['TotalPrice']; // Retrieve total amount from the orders table
+
+        // Check if the number starts with '08' or '09'
+        if (strpos($mobile, '08') === 0) {
+            $mobileMoneyOperatorRefId = '27494cb5-ba9e-437f-a114-4e7a7686bcca';
+        } elseif (strpos($mobile, '09') === 0) {
+            $mobileMoneyOperatorRefId = '20be6c20-adeb-4b5b-a7ba-0769820df4fb';
+        } else {
+            $mobileMoneyOperatorRefId = null;
+        }
+
+        // Ensure the mobile_money_operator_ref_id is valid before proceeding with the cURL request
+        if ($mobileMoneyOperatorRefId !== null && !empty($amount)) {
+            // cURL request (POST)
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_URL => "https://api.paychangu.com/mobile-money/payments/initialize",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode([
+                    'mobile' => $mobile,
+                    'mobile_money_operator_ref_id' => $mobileMoneyOperatorRefId,
+                    'amount' => $amount, // Dynamic amount from the orders table
+                    'charge_id' => '190', // Example charge ID
+                    'email' => $userEmail, // Email from session
+                    'first_name' => $firstName, // First name from session
+                    'last_name' => $_SESSION['users_LastName'] // Last name from session (add to login session if needed)
+                ]),
+                CURLOPT_HTTPHEADER => [
+                    "Authorization: Bearer sec-test-hGZO2qC50metjPeq4SSJhn4iXMDPNcID",
+                    "accept: application/json",
+                    "content-type: application/json"
+                ],
+            ]);
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+                echo "cURL Error #2: " . $err;
+            } else {
+                echo "Second Request Response: " . $response;
+            }
+        } else {
+            echo "Invalid mobile number or no valid amount found.";
+        }
+
+    } else {
+        echo "No data found for the specified user or no pending orders.";
+    }
+    $stmt->close();
+} else {
+    echo "Error in SQL statement: " . $conn->error;
+}
+
 $conn->close();
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment</title>
-</head>
-<body>
-<script src="https://www.paypal.com/sdk/js?client-id=ATDmUJc_BrEUewbOg-j-j_oKIkmkYsxsVkM_L-RZirDTPGOt_Mk6op0E5h0NAxiAsPpALG8Fy1r_RB-R&currency=USD"></script>
-
-<div id="paypal-button-container"></div>
-
-<script>
-paypal.Buttons({
-    createOrder: function(data, actions) {
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: '<?php echo $totalPrice; ?>' // Dynamically pass the PHP total price
-                }
-            }]
-        });
-    },
-    onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-            console.log('Capture details:', details); // Log the full response
-
-            return fetch('capture.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    orderID: data.orderID, // Ensure correct field name
-                    orderId: <?php echo json_encode($order_id); ?>,
-                    totalPrice: <?php echo json_encode($totalPrice); ?>
-                })
-            }).then(function(res) {
-                return res.json();
-            }).then(function(response) {
-                console.log('Server response:', response); // Log the response from the server
-                
-                if (response.status === 'success') {
-                    alert('Transaction completed by ' + (response.payerName || 'Anonymous'));
-                    window.location.href = 'confirmation.php?order_id=' + <?php echo json_encode($order_id); ?>;
-                } else {
-                    alert('Transaction completed, but there was an issue with processing the payment.');
-                }
-            }).catch(function(error) {
-                console.error('Error capturing order:', error);
-                alert('An error occurred while processing your payment.');
-            });
-        });
-    }
-}).render('#paypal-button-container');
-</script>
-</body>
-</html>

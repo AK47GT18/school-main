@@ -214,61 +214,48 @@ if ($conn->connect_error) {
           <div class="rights">          <span>  <p ><box-icon name='copyright' ></box-icon>2024 E-SHOP. All Rights Reserved</p></span>
           </div>
   <script >
-    document.addEventListener("DOMContentLoaded",function(){
-        const products = document.querySelectorAll(".items");
-        products.forEach(product=>{ 
-          product.addEventListener("dblclick",function(){
-          const ProductImg = product.querySelector('.ProductImg').src;
-          const ProductName = product.querySelector(".description").textContent;
-          const ProductPrice =product.querySelector(".Price-description").textContent;
-          
-          console.log("Storing product data:");
-          console.log("Image:", ProductImg);
-          console.log("Name:", ProductName);
-          console.log("Price:", ProductPrice);
+   document.addEventListener("DOMContentLoaded", () => {
+   const products = document.querySelectorAll(".items");
+   products.forEach(product => { 
+      product.addEventListener("dblclick", function() {
+         const productImg = product.querySelector('.ProductImg').src;
+         const productName = product.querySelector(".description").textContent;
+         const productPrice = product.querySelector(".Price-description").textContent;
 
-          sessionStorage.setItem("Product-Image",ProductImg);
-          sessionStorage.setItem("Product-Price",ProductPrice);
-          sessionStorage.setItem("Product-Name",ProductName);
-         
-          window.location.href ="product-details.html";
-        });
-        
-          });
-    });
- 
-    
-    
-    document.addEventListener("DOMContentLoaded",() =>{
-    const productDetails = [];
-  
- function addproductdetails(event){
-    const product = event.target.closest(".items");
-     if(product)
-{       const productID = product.getAttribute('data-id');
-        const name = product.querySelector(".description").textContent;
-        const price = product.querySelector(".Price").textContent;
-        const image = product.querySelector(".ProductImg").src;
-        const Details = {
-            ID: productID,
-            Image: image,
-            Name: name,
-            Price: price
-        };
-      const existingIndex = productDetails.findIndex(Item => Item.Name === Details.Name);
-      if(existingIndex !==-1){
-        productDetails.splice(existingIndex, 1);
-      }
-        productDetails.push(Details);
-        localStorage.setItem('SelectedProducts',JSON.stringify(productDetails));
-        console.log(productDetails);
-      } 
-} 
+         localStorage.setItem("Product-Image", productImg);
+         localStorage.setItem("Product-Price", productPrice);
+         localStorage.setItem("Product-Name", productName);
+      
+         window.location.href = "product-details.html";
+      });
+
+      // Add to cart functionality
+      product.querySelector(".btn3").addEventListener("click", (event) => {
+         const productID = product.getAttribute('data-id');
+         const name = product.querySelector(".description").textContent;
+         const price = product.querySelector(".Price").textContent;
+         const image = product.querySelector(".ProductImg").src;
+     
+         let productDetails = JSON.parse(localStorage.getItem('SelectedProducts')) || [];
+         const Details = { ID: productID, Image: image, Name: name, Price: price };
+     
+         const existingIndex = productDetails.findIndex(item => item.ID === productID);
+         if (existingIndex !== -1) {
+            productDetails[existingIndex] = Details;
+         } else {
+            productDetails.push(Details);
+         }
+     
+         localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
+      });
+   });
+});
+
 const AddToCarts = document.querySelectorAll(".btn3");
 AddToCarts.forEach(AddToCart =>{
     AddToCart.addEventListener("click",addproductdetails);
 });
-});
+
 
 let slideIndex = 0;
 let direction = 1; // 1 for forward, -1 for backward
