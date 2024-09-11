@@ -38,34 +38,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p><b>E-SHOP</b></p>
             </li>
             <li><a href="index.php" class="active"><i><box-icon name='home-alt'></box-icon></i>Home</a></li>
-            <li><a href="shop.html"><box-icon type='solid' name='shopping-bags'></box-icon>Shop</a></li>
-            <li><a href="cart.html"><i><box-icon name='cart'></box-icon></i> Cart</a></li>
-            <li><a href="ContactUs.html">Contact Us</a></li>
+            <li><a href="shop.php"><box-icon type='solid' name='shopping-bags'></box-icon>Shop</a></li>
+            <li><a href="cart.php"><i><box-icon name='cart'></box-icon></i> Cart</a></li>
+            <li><a href="Contact.php">Contact Us</a></li>
 
-            <div class="srch-bx">
-                <li>
-                    <input type="search" placeholder="search" class="srh">
-                    <i><box-icon class="sch" name='search'></box-icon></i>
-                </li>
-            </div>
-
+            <?php
+                
+                if (isset($_SESSION['users_UserID'])) {
+                  echo '<li>' . htmlspecialchars($_SESSION['users_FirstName']) . '</li>';
+                }
+                ?>
+            
+            
+                <div class="srch-bx">
+                    <li> <form method="post" action="search-products.php">
+                        <input type="search" name="search" placeholder="Search" class="srh">
+                        <button type="submit"><box-icon class="sch" name='search'></box-icon></button>
+                    </form>
+                </li> 
+                </div>
+            
             <input type="checkbox" id="menu-toggle">
             <label for="menu-toggle" class="ham">
-                <span></span>
-                <span></span>
-                <span></span>
-            </label>
-            <nav class="sidebar">
-                <ul>
-                    <li><a href="Sign-up.html">Sign-Up</a></li>
-                    <li><a href="Login.html">Login</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">FAQs</a></li>
-                    <li><a href="#">Ts and Cs</a></li>
-                </ul>
-            </nav>
-        </ul>
-    </nav>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </label>
+               
+                    <?php
+                
+                if (isset($_SESSION['users_UserID'])) {
+
+                 echo ' <nav class="sidebar">        
+                    <ul> 
+                    <li>My Account</li>
+                    <li>
+                  <a href="#">About Us</a>
+              </li>
+              <li>
+                  <a href="#">FAQs</a>
+              </li>
+              <li>
+                  <a href="Terms and Conditions.html">Ts and Cs</a>
+              </li>
+              <li>
+                  <a href="Logout.php">Logout</a>
+
+              </li>
+                     
+                    </ul>
+                </nav>';
+                }
+                else{
+                    echo'  
+                    <nav class="sidebar">        
+                    <ul><li>
+                        <a href="Sign-up.html">Sign-Up</a>
+                        </li>
+                    <li>
+                     <a href="Login.html">Login</a>
+                     </li>
+                     <li>
+                     <a href="#">About Us</a>
+                     </li>
+                     <li>
+                     <a href="#">FAQs</a>
+                     </li>
+                     <li>
+                     <a href="Terms and Conditions.html">Ts and Cs</a>
+                     </li>
+                     </ul>
+                    </nav>';
+                }
+                ?>
+                      
+                      
+               
+            </ul>
+        </nav>
+    
     <section class="cart">
         <form id="checkout-form" action="CheckOut.php" method="POST">
             <ul>

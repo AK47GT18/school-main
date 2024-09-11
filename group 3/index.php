@@ -39,11 +39,11 @@ if ($conn->connect_error) {
                
                    </li>
                 <li>
-                    <a href="index.html" class="active"><i><box-icon name='home-alt'></box-icon></i>Home</a>
+                    <a href="index.php" class="active"><i><box-icon name='home-alt'></box-icon></i>Home</a>
                 </li>
-                <li> <a href="shop.html"><box-icon type='solid' name='shopping-bags'></box-icon>Shop</a> </li>
+                <li> <a href="shop.php"><box-icon type='solid' name='shopping-bags'></box-icon>Shop</a> </li>
                 <li>  <a href="cart.php"> <i><box-icon name='cart' ></box-icon></i>Cart</a> </li>
-                <li> <a href="ContactUs.html"> Contact Us </a></li>
+                <li> <a href="Contact.html"> Contact Us </a></li>
                 <?php
                 
                 if (isset($_SESSION['users_UserID'])) {
@@ -73,7 +73,7 @@ if ($conn->connect_error) {
 
                  echo ' <nav class="sidebar">        
                     <ul> 
-                    <li>' . htmlspecialchars($_SESSION['users_FirstName']) . '</li>
+                    <li>My Account</li>
                     <li>
                   <a href="#">About Us</a>
               </li>
@@ -81,7 +81,7 @@ if ($conn->connect_error) {
                   <a href="#">FAQs</a>
               </li>
               <li>
-                  <a href="Ts&Cs.html">Ts and Cs</a>
+                  <a href="Terms and Conditions.html">Ts and Cs</a>
               </li>
               <li>
                   <a href="Logout.php">Logout</a>
@@ -107,7 +107,7 @@ if ($conn->connect_error) {
                      <a href="#">FAQs</a>
                      </li>
                      <li>
-                     <a href="Ts&Cs.html">Ts and Cs</a>
+                     <a href="Terms and Conditions.html">Ts and Cs</a>
                      </li>
                      </ul>
                     </nav>';
@@ -249,12 +249,9 @@ if ($conn->connect_error) {
          localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
       });
    });
+   showSlides();
 });
 
-const AddToCarts = document.querySelectorAll(".btn3");
-AddToCarts.forEach(AddToCart =>{
-    AddToCart.addEventListener("click",addproductdetails);
-});
 
 
 let slideIndex = 0;
@@ -276,11 +273,11 @@ function showSlides() {
     }
 
     // Set timer for next slide
-    setTimeout(showSlides, 3000); // Change slide every 3 seconds
+    setTimeout(showSlides, 4000); // Change slide every 3 seconds
 }
 
-// Start the slide show
-showSlides();
+
+
 
 
 </script>
