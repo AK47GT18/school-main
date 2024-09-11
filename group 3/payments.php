@@ -20,9 +20,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 
 // Get the logged-in user's ID from the session
-$userID = $_SESSION['users_UserID']; // UserID stored during login
-$userEmail = $_SESSION['user_email']; // Email stored during login
-$firstName = $_SESSION['users_FirstName']; // FirstName stored during login
+$userID = $_SESSION['users_UserID'];
+$userEmail = $_SESSION['user_email']; 
+$firstName = $_SESSION['users_FirstName']; 
 
 // Query to retrieve user and order data from the database
 $sql = "SELECT u.PhoneNumber, o.TotalPrice 

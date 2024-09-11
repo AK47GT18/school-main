@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 
-    $stmt = $conn->prepare("SELECT * FROM products  ");
+    $stmt = $conn->prepare("SELECT * FROM products LIMIT 8 ");
     $stmt->execute();
     $result = $stmt->get_result();
 ?>
@@ -121,10 +121,10 @@ if ($conn->connect_error) {
     
         <section class="slider">
     <div class="slides">
-        <div class="slide active"> <!-- Default first slide as active -->
+        <div class="slide active"> 
             <img src="images/cord-allman-0aWg-ubSVLM-unsplash.jpg" alt="Slide 1">
             <div class="text">
-                <h3>E-SHOP 1</h3>
+                <h3>E-SHOP </h3>
                 <p>Welcome To Our E-Shop with a variety of options to buy</p>
                 <button class="btn01"><a href="shop.html">Shop-now</a></button>
             </div>
@@ -132,7 +132,7 @@ if ($conn->connect_error) {
         <div class="slide">
             <img src="images/glenn-carstens-peters-npxXWgQ33ZQ-unsplash.jpg" alt="Slide 2">
             <div class="text">
-                <h3>E-SHOP 2</h3>
+                <h3>E-SHOP </h3>
                 <p>Explore the latest products</p>
                 <button class="btn01"><a href="shop.html">Shop now</a></button>
             </div>
@@ -140,7 +140,7 @@ if ($conn->connect_error) {
         <div class="slide">
             <img src="images/maxim-hopman-Hin-rzhOdWs-unsplash.jpg" alt="Slide 3">
             <div class="text">
-                <h3>E-SHOP 3</h3>
+                <h3>E-SHOP </h3>
                 <p>Discover amazing deals</p>
                 <button class="btn01"><a href="shop.html">Shop now</a></button>
             </div>
@@ -223,7 +223,7 @@ if ($conn->connect_error) {
         window.location.href = "product-details.php?ProductID=" + productId;
       });
 
-      // Add to cart functionality
+
       product.querySelector(".btn3").addEventListener("click", (event) => {
          const productID = product.getAttribute('data-id');
          const name = product.querySelector(".description").textContent;
@@ -238,6 +238,7 @@ if ($conn->connect_error) {
             productDetails[existingIndex] = Details;
          } else {
             productDetails.push(Details);
+            alert("item added to cart");
          }
      
          localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
@@ -249,7 +250,7 @@ if ($conn->connect_error) {
 
 
 let slideIndex = 0;
-let direction = 1; // 1 for forward, -1 for backward
+let direction = 1; 
 const slides = document.querySelectorAll('.slide');
 
 function showSlides() {
@@ -259,15 +260,15 @@ function showSlides() {
     // Move to the next slide
     slideIndex += direction;
 
-    // Check if we need to change direction
+    
     if (slideIndex >= slides.length - 1 && direction === 1) {
         direction = -1; // Start moving backward
     } else if (slideIndex <= 0 && direction === -1) {
         direction = 1; // Start moving forward
     }
 
-    // Set timer for next slide
-    setTimeout(showSlides, 4000); // Change slide every 3 seconds
+   
+    setTimeout(showSlides, 4000); // Change slide every 4 seconds
 }
 
 

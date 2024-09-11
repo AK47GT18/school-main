@@ -1,9 +1,10 @@
 <?php
 session_start();
-/*if (!($_SESSION['users_UserID'] === '4')) {
+if ( !($_SESSION['role'] === 'Admin')) {
+    echo "<script>alert('You aint the admin bruh');</script>";
     header("Location: Login.html");
     exit();
-}*/
+}
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -22,14 +23,14 @@ $stmt = $conn->prepare("SELECT COUNT(UserID) AS user_count FROM users WHERE role
 $stmt->execute();
 $stmt->bind_result($count);
 $stmt->fetch();
-$stmt->close(); // Close the statement
+$stmt->close(); 
 
 // Prepare and execute the query to sum the total_price column
 $stmt = $conn->prepare("SELECT SUM(TotalPrice) AS total_sum FROM orders");
 $stmt->execute();
 $stmt->bind_result($totalSum);
 $stmt->fetch();
-$stmt->close(); // Close the statement
+$stmt->close(); 
 
 $stmt = $conn->prepare("SELECT COUNT(id) AS sales_count FROM orders WHERE payment_status = ?");
 $stmt->bind_param("s", $payment_status);
@@ -56,6 +57,7 @@ $conn->close();
             <div class="logo">
                 <a href="index.php"><h2>E-SHOP.</h2></a>
             </div>
+           
             <div class="search">
                 <input type="text" id="search" placeholder="Search here">
             </div>
@@ -105,7 +107,8 @@ $conn->close();
                 </div>
                 <div class="card">
                     <div class="card-content">
-                        <div class="number"><?php echo "MWK" . number_format($totalSum, 2); ?></div>
+                        <div class="number"><?php if(empty($totalSum))
+                        {echo "0";}else{echo "MWK" .$totalSum;} ?></div>
                         <div class="card-name">Earnings</div>
                         <div class="icon-box">
                             <i class="fas fa-hand-holding-usd"></i>
@@ -125,7 +128,15 @@ $conn->close();
         </div>
     </div>
     <div class="form">
+  
         <form method="post" action="Upload.php" id="uploadForm" enctype="multipart/form-data">
+        <?php
+                
+                if (isset($_SESSION['users_UserID'])) {
+                 echo '<lable>Welcome ' . htmlspecialchars($_SESSION['users_FirstName']) . '</lable>';
+
+                }
+                ?>
             <h2>Upload Item</h2>
             <label for="itemName">Item Name:</label>
             <input type="text" id="itemName" name="itemName" required>

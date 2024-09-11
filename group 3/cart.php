@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="discount">Discount</label>
                 <input type="text" name="discount">
                 <label for="Total">Total</label>
-                <input id="ProductTotal" type="text" placeholder="MWK 00.00" readonly>
+                <input id="ProductTotal" type="text" placeholder="MWK 00" readonly>
                 <input type="hidden" name="products" id="products">
                 <input type="hidden" name="total_price" id="total_price">
             </div>
@@ -168,14 +168,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </table>`;
             cartItemsContainer.appendChild(productDiv);
 
-            totalPrice += parseFloat(product.Price.replace('MWK', ''));
+            totalPrice += parseInt(product.Price.replace('MWK', ''));
         });
 
         updateTotalPrice(totalPrice);
 
         // Update hidden input fields with cart data
         document.getElementById("products").value = JSON.stringify(productList);
-        document.getElementById("total_price").value = totalPrice.toFixed(2);
+        document.getElementById("total_price").value = totalPrice;
     } else {
         document.querySelector(".cart-item-container").innerHTML = "No products in local storage";
     }
@@ -196,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Clear Cart button
     document.getElementById("clear-cart").addEventListener("click", (event) => {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault(); 
         clearCart();
     });
 });
@@ -226,7 +226,7 @@ function removeProduct(event) {
         product.remove();
 
         // Recalculate total price
-        let newTotal = productDetails.reduce((acc, curr) => acc + parseFloat(curr.Price.replace('MWK', '')), 0);
+        let newTotal = productDetails.reduce((acc, curr) => acc + parseInt(curr.Price.replace('MWK', '')), 0);
         updateTotalPrice(newTotal);
 
         // Update hidden fields
@@ -250,7 +250,7 @@ function clearCart() {
 function updateQuantity(event) {
     const quantityInput = event.target;
     const newQuantity = parseInt(quantityInput.value);
-    const pricePerItem = parseFloat(quantityInput.dataset.price.replace('MWK', ''));
+    const pricePerItem = parseInt(quantityInput.dataset.price.replace('MWK', ''));
     const productID = quantityInput.dataset.id;
 
     let productDetails = JSON.parse(localStorage.getItem('SelectedProducts')) || [];
@@ -258,19 +258,19 @@ function updateQuantity(event) {
     // Find the product in localStorage and update quantity (if needed)
     const product = productDetails.find(item => item.ID === productID);
     if (product) {
-        const oldPrice = parseFloat(product.Price.replace('MWK', ''));
+        const oldPrice = parseInt(product.Price.replace('MWK', ''));
         const newPrice = pricePerItem * newQuantity;
         product.Price = `MWK ${newPrice.toFixed(2)}`;
         localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
     }
 
     // Recalculate total price
-    let newTotal = productDetails.reduce((acc, curr) => acc + parseFloat(curr.Price.replace('MWK', '')), 0);
+    let newTotal = productDetails.reduce((acc, curr) => acc + parseInt(curr.Price.replace('MWK', '')), 0);
     updateTotalPrice(newTotal);
 
     // Update hidden fields
     document.getElementById("products").value = JSON.stringify(productDetails);
-    document.getElementById("total_price").value = newTotal.toFixed(2);
+    document.getElementById("total_price").value = newTotal;
 }
 
     </script>

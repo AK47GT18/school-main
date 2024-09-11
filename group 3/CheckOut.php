@@ -1,17 +1,17 @@
 <?php
-session_start(); // Start the session to use session variables
+session_start(); 
 
-// Check if the user is logged in
+// Redirect if not logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location: Login.php"); 
+    header("Location: Login.php");
     exit();
 }
 
 // Database connection
-$servername = "localhost"; 
-$username = "root"; 
-$password = ""; 
-$dbname = "e-shop"; 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "e-shop";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -20,20 +20,23 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get the logged-in user's ID and other details from the session
-$userID = $_SESSION['users_UserID']; // UserID stored during login
-$userEmail = $_SESSION['user_email']; // Email stored during login
-$firstName = $_SESSION['users_FirstName']; // FirstName stored during login
-$Phone = $_SESSION['PhoneNumber']; // PhoneNumber stored in the session
+// Get the logged-in user's details from the session
+$userID = $_SESSION['users_UserID']; 
+$userEmail = $_SESSION['user_email']; 
+$firstName = $_SESSION['users_FirstName']; 
+$Phone = $_SESSION['PhoneNumber']; 
+$totalPrice = isset($_POST['total_price']) ? (float)$_POST['total_price'] : 0;
+$products = isset($_POST['products']) ? $_POST['products'] : '';
 
-// Generate a random total price between 100 and 500
-$totalPrice = rand(100, 500); // Adjust the range as needed
-$products = isset($_POST['products']) ? $_POST['products'] : ''; // This should be a JSON-encoded array
+if ($totalPrice <= 0) {
+    echo "Invalid total price.";
+    exit();
+}
 
 // Generate a random charge_id
-$charge_id = bin2hex(random_bytes(16)); // Generates a unique identifier
+$charge_id = bin2hex(random_bytes(16));
 
-// Insert order into database
+// Insert order into the database
 $stmt = $conn->prepare("INSERT INTO orders (User_ID, TotalPrice, Products, ChargeID) VALUES (?, ?, ?, ?)");
 $stmt->bind_param("iiss", $userID, $totalPrice, $products, $charge_id);
 
@@ -52,7 +55,6 @@ if ($stmt->execute()) {
             $row = $result->fetch_assoc();
             $orderID = $row['id'];
 
-            // Check if $Phone is not null and has a value
             $mobileMoneyOperatorRefId = '27494cb5-ba9e-437f-a114-4e7a7686bcca';
             if ($mobileMoneyOperatorRefId !== null && !empty($totalPrice)) {
                 // cURL request (POST)
@@ -69,10 +71,10 @@ if ($stmt->execute()) {
                     CURLOPT_POSTFIELDS => json_encode([
                         'mobile' => $Phone,
                         'mobile_money_operator_ref_id' => $mobileMoneyOperatorRefId,
-                        'amount' => $totalPrice, // Random amount
-                        'charge_id' => $charge_id, // Unique charge ID
-                        'email' => $userEmail, // Email from session
-                        'first_name' => $firstName, // First name from session
+                        'amount' => $totalPrice,
+                        'charge_id' => $charge_id,
+                        'email' => $userEmail,
+                        'first_name' => $firstName,
                     ]),
                     CURLOPT_HTTPHEADER => [
                         "Authorization: Bearer sec-test-hGZO2qC50metjPeq4SSJhn4iXMDPNcID",
