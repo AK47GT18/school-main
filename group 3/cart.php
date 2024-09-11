@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location: Login.php"); 
+    header("Location: Login.html"); 
     exit();
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

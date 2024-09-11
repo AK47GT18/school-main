@@ -218,15 +218,9 @@ if ($conn->connect_error) {
    const products = document.querySelectorAll(".items");
    products.forEach(product => { 
       product.addEventListener("dblclick", function() {
-         const productImg = product.querySelector('.ProductImg').src;
-         const productName = product.querySelector(".description").textContent;
-         const productPrice = product.querySelector(".Price-description").textContent;
-
-         localStorage.setItem("Product-Image", productImg);
-         localStorage.setItem("Product-Price", productPrice);
-         localStorage.setItem("Product-Name", productName);
+        const productId = product.dataset.id;
       
-         window.location.href = "product-details.html";
+        window.location.href = "product-details.php?ProductID=" + productId;
       });
 
       // Add to cart functionality

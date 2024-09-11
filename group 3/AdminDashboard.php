@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!($_SESSION['users_UserID'] === '4')) {
+    header("Location: Login.html");
+    exit();
+}
 $servername = "localhost";
 $username = "root";
 $password = "";
