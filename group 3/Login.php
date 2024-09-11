@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Check for admin credentials
                     $adminPassword = 'Arthony#47K'; // Ideally, this should be hashed and compared securely
                     if ($Password === $adminPassword) {
-                        header("Location: AdminDashboard.html");
+                        header("Location: AdminDashboard.php");
                         exit();
                     }
 
