@@ -212,29 +212,24 @@ function updateTotalPrice(totalPrice) {
 
 // Remove individual product from cart and localStorage
 function removeProduct(event) {
+ 
     const product = event.target.closest(".cart-items");
     if (product) {
+        
         const productID = product.querySelector(".product-quantity").dataset.id;
+
         let productDetails = JSON.parse(localStorage.getItem('SelectedProducts')) || [];
-
-        // Filter out the product with matching ID
         productDetails = productDetails.filter(item => item.ID !== productID);
-
-        // Update localStorage with remaining products
         localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
-
-        // Remove product from DOM
         product.remove();
-
-        // Recalculate total price
-        let newTotal = productDetails.reduce((acc, curr) => acc + parseInt(curr.Price.replace('MWK', '')), 0);
+        let newTotal = productDetails.reduce((acc, curr) => acc + parseFloat(curr.Price.replace('MWK', '')), 0);
         updateTotalPrice(newTotal);
 
-        // Update hidden fields
         document.getElementById("products").value = JSON.stringify(productDetails);
         document.getElementById("total_price").value = newTotal.toFixed(2);
     }
 }
+
 
 // Clear the entire cart
 function clearCart() {
@@ -250,8 +245,8 @@ function clearCart() {
 // Update quantity and total price when user changes quantity
 function updateQuantity(event) {
     const quantityInput = event.target;
-    const newQuantity = parseInt(quantityInput.value);
-    const pricePerItem = parseInt(quantityInput.dataset.price.replace('MWK', ''));
+    const newQuantity = parseInt(quantityInput.value, 10);
+    const pricePerItem = parseFloat(quantityInput.dataset.price.replace('MWK ', ''));
     const productID = quantityInput.dataset.id;
 
     let productDetails = JSON.parse(localStorage.getItem('SelectedProducts')) || [];
@@ -259,21 +254,19 @@ function updateQuantity(event) {
     // Find the product in localStorage and update quantity (if needed)
     const product = productDetails.find(item => item.ID === productID);
     if (product) {
-        const oldPrice = parseInt(product.Price.replace('MWK', ''));
         const newPrice = pricePerItem * newQuantity;
         product.Price = `MWK ${newPrice.toFixed(2)}`;
         localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
     }
 
     // Recalculate total price
-    let newTotal = productDetails.reduce((acc, curr) => acc + parseInt(curr.Price.replace('MWK', '')), 0);
+    let newTotal = productDetails.reduce((acc, curr) => acc + parseFloat(curr.Price.replace('MWK ', '')), 0);
     updateTotalPrice(newTotal);
 
     // Update hidden fields
     document.getElementById("products").value = JSON.stringify(productDetails);
-    document.getElementById("total_price").value = newTotal;
+    document.getElementById("total_price").value = newTotal.toFixed(2);
 }
-
     </script>
 </body>
 </html>
