@@ -136,8 +136,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div>
-            <button id="clear-cart">Clear Cart</button>
-                <button class="check-out" id="CheckOut" type="submit">Check Out</button>
+            <button class="check-out" id="CheckOut" type="submit">Check Out</button>
+            <button class="check-out" id="clear-cart">Clear Cart</button>
+               
             </div>
         </form>
     </section>
@@ -238,7 +239,7 @@ function removeProduct(event) {
 // Clear the entire cart
 function clearCart() {
     localStorage.removeItem('SelectedProducts');
-    document.querySelector(".cart-item-container").innerHTML = "No products in local storage";
+    document.querySelector(".cart-item-container").innerHTML = "No products in cart";
     updateTotalPrice(0);
 
     // Update hidden fields

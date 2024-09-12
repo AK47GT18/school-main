@@ -166,7 +166,7 @@ if (isset($_GET['query'])) {
          } else {
             productDetails.push(Details);
          }
-     
+         alert("item added to cart");
          localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
       });
    });

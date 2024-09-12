@@ -251,3 +251,7 @@ button {
 button:hover {
     background: #555;
 }
+#error{
+    color: red;
+    margin-top: 10px;
+}

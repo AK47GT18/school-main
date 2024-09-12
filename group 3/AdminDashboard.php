@@ -49,6 +49,45 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+    <script >
+function validateUploadForm(event) {
+    event.preventDefault();
+
+    const itemName = document.getElementById("itemName").value.trim();
+    const itemPrice = document.getElementById("itemPrice").value.trim();
+    const itemDescription = document.getElementById("itemDescription").value.trim();
+    const itemImage = document.getElementById("itemImage").value.trim();
+    const itemInventory = document.getElementById("itemInventory").value.trim();
+    const itemCategory = document.getElementById("itemCategory").value.trim();
+    const error = document.getElementById("error");
+
+    let valid = true;
+
+    if (!itemName || !itemPrice || !itemDescription || !itemImage || !itemInventory || !itemCategory) {
+        error.textContent = "Please fill in all fields.";
+        valid = false;
+    } else {
+        error.textContent = "";
+        document.getElementById("uploadForm").submit(); // Submit the form
+    }
+
+    return valid;
+}
+
+function validateRemoveForm(event) {
+    event.preventDefault();
+
+    const itemName = document.getElementById("removeItemName").value.trim();
+    const error = document.getElementById("error");
+
+    if (!itemName) {
+        error.textContent = "Please enter an item name to remove.";
+        return false;
+    }
+
+    document.getElementById("removeForm").submit();
+}
+   </script>
     <title>Dashboard</title>
 </head>
 <body>
@@ -57,7 +96,6 @@ $conn->close();
             <div class="logo">
                 <a href="index.php"><h2>E-SHOP.</h2></a>
             </div>
-           
             <div class="search">
                 <input type="text" id="search" placeholder="Search here">
             </div>
@@ -65,7 +103,7 @@ $conn->close();
                 <i class="fa fa-shopping-cart"></i>
             </a>
             <div class="user">
-                <a href="ContactUs.html"> 
+                <a href="Contact.php">
                     <img src="images/services-icon-png-2309.png" alt="user">
                 </a>
             </div>
@@ -88,7 +126,7 @@ $conn->close();
                     <i class="fas fa-th-large"></i>
                     <div>Home</div>
                 </a></li>
-                <li><a href="ContactUs.html">
+                <li><a href="Contact.php">
                     <i class="fas fa-question"></i>
                     <div>Help</div>
                 </a></li>
@@ -107,8 +145,7 @@ $conn->close();
                 </div>
                 <div class="card">
                     <div class="card-content">
-                        <div class="number"><?php if(empty($totalSum))
-                        {echo "0";}else{echo "MWK" .$totalSum;} ?></div>
+                        <div class="number"><?php echo empty($totalSum) ? "0" : "MWK" . $totalSum; ?></div>
                         <div class="card-name">Earnings</div>
                         <div class="icon-box">
                             <i class="fas fa-hand-holding-usd"></i>
@@ -128,15 +165,12 @@ $conn->close();
         </div>
     </div>
     <div class="form">
-  
-        <form method="post" action="Upload.php" id="uploadForm" enctype="multipart/form-data">
-        <?php
-                
-                if (isset($_SESSION['users_UserID'])) {
-                 echo '<lable>Welcome ' . htmlspecialchars($_SESSION['users_FirstName']) . '</lable>';
-
-                }
-                ?>
+    <form method="post" action="Upload.php" id="uploadForm" enctype="multipart/form-data" onsubmit="return validateUploadForm(event)" novalidate> 
+            <?php
+            if (isset($_SESSION['users_UserID'])) {
+                echo '<label>Welcome ' . htmlspecialchars($_SESSION['users_FirstName']) . '</label>';
+            }
+            ?>
             <h2>Upload Item</h2>
             <label for="itemName">Item Name:</label>
             <input type="text" id="itemName" name="itemName" required>
@@ -157,14 +191,16 @@ $conn->close();
             <input type="text" id="itemCategory" name="itemCategory" required>
             
             <button type="submit">Upload Item</button>
+            <span id="error" style ="color: red;"></span>
         </form>
-        <form method="post" action="Remove.php" id="removeForm">
-            <h2>Remove Item</h2>
+        <form method="post" action="Remove.php" id="removeForm" onsubmit="return validateRemoveForm(event)" novalidate>            <h2>Remove Item</h2>
             <label for="removeItemName">Item Name:</label>
-            <input type="text" id="removeItemName" name="itemName" required>
-            
-            <button type="submit">Remove Item</button>
+            <input type="text" id="removeItemName" name="itemName" >
+            <span id="error" style ="color: red;"></span>
+            <button type="submit" onsubmit="validateForm4()">Remove Item</button>
         </form>
     </div>
+
+
 </body>
 </html>

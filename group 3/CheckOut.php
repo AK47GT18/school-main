@@ -77,7 +77,7 @@ if ($stmt->execute()) {
                         'first_name' => $firstName,
                     ]),
                     CURLOPT_HTTPHEADER => [
-                        "Authorization: Bearer sec-test-hGZO2qC50metjPeq4SSJhn4iXMDPNcID",
+                        "Authorization: Bearer sec-live-fs5F40mt4V077CJQfMz4B7Lr2pjU2zF2",
                         "accept: application/json",
                         "content-type: application/json"
                     ],

@@ -30,7 +30,7 @@ if ($conn->connect_error) {
 }
 
 
-    $stmt = $conn->prepare("SELECT * FROM products  ");
+    $stmt = $conn->prepare("SELECT * FROM products WHERE category = 'men'  ");
     $stmt->execute();
     $result = $stmt->get_result();
 ?>

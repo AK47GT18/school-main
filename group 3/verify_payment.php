@@ -28,7 +28,7 @@ curl_setopt_array($curl, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_HTTPHEADER => [
         "Accept: application/json",
-        "Authorization: Bearer sec-test-hGZO2qC50metjPeq4SSJhn4iXMDPNcID" // Replace with your actual API key
+        "Authorization: Bearer sec-live-fs5F40mt4V077CJQfMz4B7Lr2pjU2zF2" // Replace with your actual API key
     ],
 ]);
 
@@ -42,21 +42,14 @@ curl_close($curl);
 // Decode JSON response
 $responseData = json_decode($response, true);
 
-// Update payment status in payments table
-$sql = "UPDATE payments SET payment_status = 'completed', amount_paid = ?, currency = 'MWK' WHERE transaction_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("is", $totalPrice, $charge_id);
 
-if ($stmt->execute()) {
+
     // Optionally update order status
     $sql = "UPDATE orders SET payment_status = 'completed' WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $orderID);
     $stmt->execute();
     $updateStatus = "Payment information updated successfully.";
-} else {
-    $updateStatus = "Error updating payment information: " . $stmt->error;
-}
 
 $stmt->close();
 $conn->close();
