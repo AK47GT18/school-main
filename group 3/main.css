@@ -1087,6 +1087,10 @@ position: relative;
     border-radius: 5px;
     display: inline-block;
     transition: background 0.3s ease;
+    -webkit-transition: background 0.3s ease;
+    -moz-transition: background 0.3s ease;
+    -ms-transition: background 0.3s ease;
+    -o-transition: background 0.3s ease;
 }
 
 .text .btn01 a {

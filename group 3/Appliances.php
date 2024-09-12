@@ -16,24 +16,6 @@ if ($conn->connect_error) {
     $stmt->execute();
     $result = $stmt->get_result();
 ?>
-<?php
- session_start();
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "e-shop";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-
-    $stmt = $conn->prepare("SELECT * FROM products  ");
-    $stmt->execute();
-    $result = $stmt->get_result();
-?>
 
 <!DOCTYPE html> 
 <html lang="en">

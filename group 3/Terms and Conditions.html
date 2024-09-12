@@ -1,67 +1,89 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="author" content="group 3">
-        <meta name="viewpoint" content="width= device-width, initial-scale=0.1">
-        <link rel="stylesheet" type="text/css" href="main.css">
-        <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-     </head>
-      
-    <body>
-        <nav class="top-bar">
-        
-            <ul>
-               <li>
-                <p> <B>E-SHOP</B></p>
-               </li>
-                <li>
-                    <a href="index.php" class="active"><i><box-icon name='home-alt'></box-icon></i>Home</a>
-                </li>
-                <li> <a href="shop.php"><box-icon type='solid' name='shopping-bags'></box-icon>Shop</a> </li>
-                <li>  <a href="cart.php"> <i><box-icon name='cart' ></box-icon></i> Cart</a> </li>
-                <li> <a href="Contact.php"> Contact Us </a></li>
-            
-            
-                <div class="srch-bx"> <li> <input type="search" placeholder="search" class="srh">
-                    <i><box-icon class="sch" name='search' ></box-icon></i> </li> 
-                </div>
-            
-            <input type="checkbox" id="menu-toggle">
-            <label for="menu-toggle" class="ham">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </label>
-                <nav class="sidebar">
-        
-                    <ul>
-                        <li>
-                            <a href="Sign-up.html">Sign-Up</a>
-                        </li>
-                        <li>
-                            <a href="Login.html">Login</a>
-                        </li>
-                        <li>
-                            <a href="#">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#">FAQs</a>
-                        </li>
-                        <li>
-                            <a href="Terms and Conditions.html">Ts and Cs</a>
-                        </li>
-                    </ul>
-                </nav>
-            </ul>
-        </nav>
-    
-       <div id="Ts">
-        <h4>Terms and Conditions</h4>
-        <p >In the unfathomable vastness of the cosmos, an intricate ballet of celestial phenomena unfolds, an epic tale woven across the cosmic fabric that spans epochs and traverses the immeasurable reaches of space. Galaxies, those colossal cosmic conglomerations, spiral in majestic pirouettes, each a testament to the gravitational forces sculpting the cosmic landscape. Within this cosmic tapestry, stars, radiant storytellers, cast their luminous glow upon the cosmic stage, creating constellations that narrate sagas as ancient as time itself, their radiant stories etched into the very fabric of the night sky. On Earth, a minuscule orb suspended in the cosmic theater, life dances in myriad forms, from the microscopic intricacies of cellular life to the complex ecosystems that paint the planet with vibrant hues of biodiversity. Sentient beings, custodians of consciousness, contemplate the cosmic mysteries, pondering their place in the cosmic order and seeking understanding through the lens of science, philosophy, and art.<br><br> From the quantum waltz of subatomic particles to the cosmic ballet of galaxies orchestrated by the fundamental forces governing the universe, the symphony of the cosmos resonates with the harmonious interplay of matter and energy. Human existence, a fleeting chapter in the cosmic tome, embarks on a quest for knowledge that transcends the boundaries of understanding, exploring the cosmos and the depths of the mind alike. In this cosmic odyssey, the kaleidoscope of human emotions paints the canvas of experience with strokes that span the spectrum from euphoria to existential contemplation. The cosmic drama unfolds with an interplay of light and shadow, creation and destruction, birthing a tapestry of incomprehensible complexity. As we stand at the juncture of the cosmic and the mundane, our awareness oscillates between the awe-inspiring grandeur of the cosmos and the intricate details of everyday life, realizing that our existence is a transient whisper in the vast cosmic symphony that echoes through the corridors of eternity.</p>
-        <p >In the boundless expanses of the cosmos, a cosmic narrative of colossal proportions unfolds, a celestial epic that stretches across the cosmic tapestry with the grandeur of a cosmic opera. Galaxies, vast island universes, twirl and whirl in the cosmic ballet, their spiral arms and majestic structures revealing the gravitational choreography that guides their dance through the cosmic theater. Amidst this celestial expanse, stars shimmer as cosmic storytellers, crafting radiant constellations that tell tales as ancient as the cosmos itself, stories imprinted upon the velvet canvas of the night sky, each constellation a chapter in the celestial book of myths and wonders. Earth, a minuscule oasis in the cosmic desert, hosts the wondrous dance of life, from microscopic organisms orchestrating the delicate ballet of ecosystems to sentient beings endowed with consciousness, contemplating the cosmic mysteries that unfold above and within.<br><br> The dance of particles at the quantum level mirrors the cosmic ballet of galaxies, and the symphony of fundamental forces governs the harmonious interplay of matter and energy throughout the cosmic expanse. Human consciousness, a flicker of awareness in the cosmic timeline, embarks on a profound intellectual journey, delving into the realms of science, philosophy, and art to unravel the mysteries of the universe. In this cosmic odyssey, the kaleidoscope of human emotions paints the canvas of experience with hues ranging from the sublime ecstasy of joy to the profound introspection of existential pondering. The cosmic drama unfolds with an intricate interplay of light and shadow, creation and entropy, giving birth to a tapestry of unparalleled complexity that challenges the limits of human comprehension. As we stand at the crossroads of the cosmic and the mundane, our existence becomes a transient whisper in the cosmic symphony echoing through the vast corridors of time and space, where the cosmic dance continues, and the cosmic narrative unfolds with ineffable beauty and unfathomable depth.</p>
-        <input type="button" value="Accept" class="btnA">
-        <input type="button" value="Decline" class="btnD">   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        p {
+            margin: 0 0 10px 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Terms and Conditions</h1>
+
+        <p><strong>1. Introduction</strong></p>
+        <p>Welcome to Unilia Eshop! These Terms and Conditions ("Terms") govern your use of our website and services. By accessing or using <a href="http://www.yourwebsiteurl.com">http://localhost/school-main/group%203/index.html</a>, you agree to comply with and be bound by these Terms. If you do not agree with any part of these Terms, you must not use our Website.</p>
+
+        <p><strong>2. Changes to Terms</strong></p>
+        <p>We reserve the right to update or modify these Terms at any time without prior notice. Any changes will be effective immediately upon posting on the Website. Your continued use of the Website following any changes constitutes your acceptance of the new Terms. It is your responsibility to review these Terms periodically.</p>
+
+        <p><strong>3. User Accounts</strong></p>
+        <p>To access certain features of our Website, you may be required to create an account. You agree to provide accurate, complete, and up-to-date information during registration and to update such information to keep it accurate, complete, and current. You are responsible for safeguarding your account credentials and for all activities that occur under your account.</p>
+
+        <p><strong>4. Use of the Website</strong></p>
+        <p>You agree to use our Website only for lawful purposes and in accordance with these Terms. You shall not:</p>
+        <ul>
+            <li>Use the Website in any way that violates any applicable local, national, or international law or regulation.</li>
+            <li>Engage in any conduct that restricts or inhibits anyone’s use or enjoyment of the Website, or which, as determined by us, may harm us or users of the Website or expose them to liability.</li>
+            <li>Transmit, or procure the sending of, any advertising or promotional material without our prior written consent.</li>
+        </ul>
+
+        <p><strong>5. Intellectual Property</strong></p>
+        <p>The content on our Website, including but not limited to text, graphics, logos, images, and software, is the property of Unilia Eshop or its licensors and is protected by copyright, trademark, and other intellectual property laws. You may not use, reproduce, modify, distribute, or create derivative works from any content on the Website without our express written permission.</p>
+
+        <p><strong>6. Third-Party Links</strong></p>
+        <p>Our Website may contain links to third-party websites or services that are not owned or controlled by Unilia Eshop. We have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party websites or services. You acknowledge and agree that Unilia Eshop shall not be liable for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods, or services available on or through any such websites or services.</p>
+
+        <p><strong>7. User-Generated Content</strong></p>
+        <p>By submitting or posting content on our Website, you grant Unilia Eshop a worldwide, non-exclusive, royalty-free, perpetual, and fully sublicensable license to use, reproduce, modify, adapt, publish, and display such content in connection with the Website. You represent and warrant that you have the necessary rights to grant this license and that the content does not infringe or violate the rights of any third party.</p>
+
+        <p><strong>8. Disclaimers</strong></p>
+        <p>The Website is provided on an "as is" and "as available" basis. Unilia Eshop makes no representations or warranties of any kind, express or implied, regarding the operation or availability of the Website, or the information, content, materials, or products included on the Website. To the fullest extent permitted by law, Unilia Eshop disclaims all warranties, express or implied, including but not limited to implied warranties of merchantability and fitness for a particular purpose.</p>
+
+        <p><strong>9. Limitation of Liability</strong></p>
+        <p>To the maximum extent permitted by law, Unilia Eshop shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or data, whether in an action in contract, tort (including but not limited to negligence), or otherwise, arising out of or in any way connected with the use of or inability to use the Website. In no event shall Unilia Eshop's total liability for any claim arising out of or in connection with these Terms or the Website exceed the amount paid by you, if any, for accessing the Website.</p>
+
+        <p><strong>10. Indemnification</strong></p>
+        <p>You agree to indemnify, defend, and hold harmless Unilia Eshop, its affiliates, officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, or expenses, including reasonable attorneys' fees, arising out of or related to your use of the Website or your breach of these Terms.</p>
+
+        <p><strong>11. Governing Law</strong></p>
+        <p>These Terms shall be governed by and construed in accordance with the laws of Malawi, without regard to its conflict of law principles. Any legal action or proceeding arising under or relating to these Terms shall be brought exclusively in the courts located in Malawi.</p>
+
+        <p><strong>12. Termination</strong></p>
+        <p>We reserve the right to terminate or suspend your access to our Website, without prior notice or liability, for any reason, including if you breach these Terms. Upon termination, your right to use the Website will immediately cease.</p>
+
+        <p><strong>13. Contact Information</strong></p>
+        <p>If you have any questions about these Terms, please contact us at:</p>
+        <p><strong>Unilia Eshop</strong><br>
+        Livingstonia University,<br>
+        Malawi<br>
+        <a href="mailto:websmtp47@gmail.com">websmtp47@gmail.com</a><br>
+        +265 885620896</p>
+
+        <p><strong>14. Entire Agreement</strong></p>
+        <p>These Terms constitute the entire agreement between you and Unilia Eshop regarding your use of the Website and supersede all prior agreements and understandings, whether written or oral, relating to the Website.</p>
     </div>
-    </body>
+</body>
 </html>

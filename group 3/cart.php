@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             
                 <div class="srch-bx">
-                    <li> <form method="post" action="search-products.php">
+                    <li> <form id="srch-bx" method="post" action="search-products.php">
                         <input type="search" name="search" placeholder="Search" class="srh">
                         <button type="submit"><box-icon class="sch" name='search'></box-icon></button>
                     </form>

@@ -45,7 +45,7 @@ if ($conn->connect_error) {
                 </li>
                 <li> <a href="shop.php"><box-icon type='solid' name='shopping-bags'></box-icon>Shop</a> </li>
                 <li>  <a href="cart.php"> <i><box-icon name='cart' ></box-icon></i>Cart</a> </li>
-                <li> <a href="Contact.html"> Contact Us </a></li>
+                <li> <a href="Contact.php"> Contact Us </a></li>
                 <?php
                 
                 if (isset($_SESSION['users_UserID'])) {

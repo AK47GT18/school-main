@@ -1,4 +1,3 @@
-
 <?php
  session_start();
 $servername = "localhost";
@@ -13,7 +12,7 @@ if ($conn->connect_error) {
 }
 
 
-    $stmt = $conn->prepare("SELECT * FROM products  ");
+    $stmt = $conn->prepare("SELECT * FROM products LIMIT 8 ");
     $stmt->execute();
     $result = $stmt->get_result();
 ?>
@@ -25,6 +24,8 @@ if ($conn->connect_error) {
         <meta name="author" content="group 3">
         <meta name="Viewpoint" content="width= device-width, initial-scale=0.1">
         <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+
         <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
  
      </head>
@@ -43,7 +44,7 @@ if ($conn->connect_error) {
                 </li>
                 <li> <a href="shop.php"><box-icon type='solid' name='shopping-bags'></box-icon>Shop</a> </li>
                 <li>  <a href="cart.php"> <i><box-icon name='cart' ></box-icon></i>Cart</a> </li>
-                <li> <a href="Contact.html"> Contact Us </a></li>
+                <li> <a href="Contact.php"> Contact Us </a></li>
                 <?php
                 
                 if (isset($_SESSION['users_UserID'])) {
