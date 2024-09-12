@@ -157,5 +157,38 @@ if ($conn->connect_error) {
             } 
             ?>
             </div>
+            <script> document.addEventListener("DOMContentLoaded", () => {
+   const products = document.querySelectorAll(".items");
+   products.forEach(product => { 
+      product.addEventListener("dblclick", function() {
+        const productId = product.dataset.id;
+      
+        window.location.href = "product-details.php?ProductID=" + productId;
+      });
+
+
+      product.querySelector(".btn3").addEventListener("click", (event) => {
+         const productID = product.getAttribute('data-id');
+         const name = product.querySelector(".description").textContent;
+         const price = product.querySelector(".Price").textContent;
+         const image = product.querySelector(".ProductImg").src;
+     
+         let productDetails = JSON.parse(localStorage.getItem('SelectedProducts')) || [];
+         const Details = { ID: productID, Image: image, Name: name, Price: price };
+     
+         const existingIndex = productDetails.findIndex(item => item.ID === productID);
+         if (existingIndex !== -1) {
+            productDetails[existingIndex] = Details;
+         } else {
+            productDetails.push(Details);
+            alert("item added to cart");
+         }
+     
+         localStorage.setItem('SelectedProducts', JSON.stringify(productDetails));
+      });
+   });
+ 
+});
+</script>
     </body>
 </html>
