@@ -1,4 +1,7 @@
 <?php
+
+
+///I created this code me not you me!!!!!! AK47GT18
 // Database connection
 $servername = "localhost"; 
 $username = "root"; 
