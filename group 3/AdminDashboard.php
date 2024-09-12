@@ -26,15 +26,14 @@ $stmt->fetch();
 $stmt->close(); 
 
 // Prepare and execute the query to sum the total_price column
-$stmt = $conn->prepare("SELECT SUM(TotalPrice) AS total_sum FROM orders");
+$stmt = $conn->prepare("SELECT SUM(TotalPrice) AS total_sum FROM orders WHERE payment_status != 'pending'");
 $stmt->execute();
 $stmt->bind_result($totalSum);
 $stmt->fetch();
 $stmt->close(); 
 
-$stmt = $conn->prepare("SELECT COUNT(id) AS sales_count FROM orders WHERE payment_status = ?");
-$stmt->bind_param("s", $payment_status);
-$payment_status = 'completed';
+$stmt = $conn->prepare("SELECT COUNT(id) AS sales_count FROM orders WHERE payment_status != 'pending'");
+
 $stmt->execute();
 $stmt->bind_result($sales_count);
 $stmt->fetch();
